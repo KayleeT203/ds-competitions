@@ -1,1 +1,114 @@
-{"metadata":{"kernelspec":{"language":"python","display_name":"Python 3","name":"python3"},"language_info":{"name":"python","version":"3.12.12","mimetype":"text/x-python","codemirror_mode":{"name":"ipython","version":3},"pygments_lexer":"ipython3","nbconvert_exporter":"python","file_extension":".py"},"kaggle":{"accelerator":"none","dataSources":[{"sourceId":3136,"databundleVersionId":26502,"sourceType":"competition"}],"dockerImageVersionId":31259,"isInternetEnabled":false,"language":"python","sourceType":"notebook","isGpuEnabled":false}},"nbformat_minor":4,"nbformat":4,"cells":[{"cell_type":"code","source":"#Import\nimport pandas as pd\nimport numpy as np\n\nfrom sklearn.model_selection import train_test_split, cross_val_score\nfrom sklearn.metrics import mean_absolute_error\nfrom sklearn.pipeline import Pipeline\nfrom sklearn.impute import SimpleImputer\n\nfrom sklearn.ensemble import RandomForestRegressor\nfrom sklearn.ensemble import RandomForestClassifier\n\n#Load data\ntrain_df = pd.read_csv('/kaggle/input/titanic/train.csv')\n\nre_train_df = train_df.copy()\n\n#feature engineering\nre_train_df['Sex_num'] = re_train_df['Sex'].map({'female': 1, 'male': 0})\n\nre_train_df['Has_cabin'] = re_train_df['Cabin'].notna().astype(int)\n\nre_train_df['FamilySize'] = (\n    re_train_df['SibSp'] + re_train_df['Parch'] + 1\n)\n\nre_train_df['FarePerPerson'] = (\n    re_train_df['Fare'] / re_train_df['FamilySize']\n)\n\nre_train_df['IsChild'] = (re_train_df['Age'] < 12).astype(int)\n\n#re_train_df['IsElderly'] = (re_train_df['Age'] > 60).astype(int)\n\n#target (what to predict)\ny = re_train_df['Survived']\n#y = train_df['Survived']\n\n#freatures \nfeatures = [\n    \"Pclass\", \"Age\", \"SibSp\", \"Parch\", \n    \"FarePerPerson\", \"Sex_num\", \"Has_cabin\", \"IsChild\"\n]\n\n\nX = re_train_df[features]\n#X = train_df[features]\n\n#pipeline for better process\npipeline = Pipeline(steps=[\n    (\"imputer\", SimpleImputer(strategy=\"median\")),\n    (\"model\", RandomForestClassifier(\n        #n_estimators=274,\n        #random_state=23\n        n_estimators=300,\n        max_depth=6,\n        min_samples_leaf=5,\n        min_samples_split=10,\n        random_state=23\n    ))\n    #(\"model\", DecisionTreeClassifier(\n     #    max_leaf_nodes = 200,\n      #   random_state=23\n    #))\n    \n])\n\n\"\"\"scores = cross_val_score(\n    xgb_pipeline,\n    X,\n    y,\n    cv=5,\n    scoring=\"neg_mean_absolute_error\"\n)\n\"\"\"\nscores = cross_val_score(\n    pipeline,\n    X,\n    y,\n    cv=5,\n    scoring=\"accuracy\"\n)\n\n\n#print(\"MAE:\", -scores.mean())\nprint(\"Accuracy:\", scores.mean())\n\n\n# Train final model on full training data\npipeline.fit(X, y)\n\n# Prepare test features\ntest_df = pd.read_csv('/kaggle/input/titanic/test.csv')\n\n# Apply same feature engineering to test data\ntest_df['Sex_num'] = test_df['Sex'].map({'female': 1, 'male': 0})\ntest_df['Has_cabin'] = test_df['Cabin'].notna().astype(int)\ntest_df['FamilySize'] = test_df['SibSp'] + test_df['Parch'] + 1\ntest_df['FarePerPerson'] = test_df['Fare'] / test_df['FamilySize']\ntest_df['IsChild'] = (test_df['Age'] < 12).astype(int)\ntest_df['IsElderly'] = (test_df['Age'] > 60).astype(int)\n\nX_test = test_df[features]\n\n# Predict\ntest_preds = pipeline.predict(X_test)\n\n# Create submission file\nsubmission = pd.DataFrame({\n    \"PassengerId\": test_df[\"PassengerId\"],\n    \"Survived\": test_preds.astype(int)\n})\n\nsubmission.to_csv(\"submission.csv\", index=False)","metadata":{"_uuid":"8f2839f25d086af736a60e9eeb907d3b93b6e0e5","_cell_guid":"b1076dfc-b9ad-4769-8c92-a6c4dae69d19","trusted":true,"execution":{"iopub.status.busy":"2026-01-22T09:13:59.440932Z","iopub.execute_input":"2026-01-22T09:13:59.441314Z","iopub.status.idle":"2026-01-22T09:14:03.131581Z","shell.execute_reply.started":"2026-01-22T09:13:59.441281Z","shell.execute_reply":"2026-01-22T09:14:03.130460Z"}},"outputs":[{"name":"stdout","text":"Accuracy: 0.8170924612390935\n","output_type":"stream"}],"execution_count":2},{"cell_type":"code","source":"","metadata":{"trusted":true},"outputs":[],"execution_count":null}]}
+#Import
+import pandas as pd
+import numpy as np
+
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.metrics import mean_absolute_error
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier
+
+#Load data
+train_df = pd.read_csv('/kaggle/input/titanic/train.csv')
+
+re_train_df = train_df.copy()
+
+#feature engineering
+re_train_df['Sex_num'] = re_train_df['Sex'].map({'female': 1, 'male': 0})
+
+re_train_df['Has_cabin'] = re_train_df['Cabin'].notna().astype(int)
+
+re_train_df['FamilySize'] = (
+    re_train_df['SibSp'] + re_train_df['Parch'] + 1
+)
+
+re_train_df['FarePerPerson'] = (
+    re_train_df['Fare'] / re_train_df['FamilySize']
+)
+
+re_train_df['IsChild'] = (re_train_df['Age'] < 12).astype(int)
+
+#re_train_df['IsElderly'] = (re_train_df['Age'] > 60).astype(int)
+
+#target (what to predict)
+y = re_train_df['Survived']
+#y = train_df['Survived']
+
+#freatures 
+features = [
+    "Pclass", "Age", "SibSp", "Parch", 
+    "FarePerPerson", "Sex_num", "Has_cabin", "IsChild"
+]
+
+
+X = re_train_df[features]
+#X = train_df[features]
+
+#pipeline for better process
+pipeline = Pipeline(steps=[
+    ("imputer", SimpleImputer(strategy="median")),
+    ("model", RandomForestClassifier(
+        #n_estimators=274,
+        #random_state=23
+        n_estimators=300,
+        max_depth=6,
+        min_samples_leaf=5,
+        min_samples_split=10,
+        random_state=23
+    ))
+    #("model", DecisionTreeClassifier(
+     #    max_leaf_nodes = 200,
+      #   random_state=23
+    #))
+    
+])
+
+"""scores = cross_val_score(
+    xgb_pipeline,
+    X,
+    y,
+    cv=5,
+    scoring="neg_mean_absolute_error"
+)
+"""
+scores = cross_val_score(
+    pipeline,
+    X,
+    y,
+    cv=5,
+    scoring="accuracy"
+)
+
+
+#print("MAE:", -scores.mean())
+print("Accuracy:", scores.mean())
+
+
+# Train final model on full training data
+pipeline.fit(X, y)
+
+# Prepare test features
+test_df = pd.read_csv('/kaggle/input/titanic/test.csv')
+
+# Apply same feature engineering to test data
+test_df['Sex_num'] = test_df['Sex'].map({'female': 1, 'male': 0})
+test_df['Has_cabin'] = test_df['Cabin'].notna().astype(int)
+test_df['FamilySize'] = test_df['SibSp'] + test_df['Parch'] + 1
+test_df['FarePerPerson'] = test_df['Fare'] / test_df['FamilySize']
+test_df['IsChild'] = (test_df['Age'] < 12).astype(int)
+test_df['IsElderly'] = (test_df['Age'] > 60).astype(int)
+
+X_test = test_df[features]
+
+# Predict
+test_preds = pipeline.predict(X_test)
+
+# Create submission file
+submission = pd.DataFrame({
+    "PassengerId": test_df["PassengerId"],
+    "Survived": test_preds.astype(int)
+})
+
+submission.to_csv("submission.csv", index=False)
