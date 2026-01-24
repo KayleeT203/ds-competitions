@@ -44,4 +44,5 @@ Features were designed to capture socio-economic context and behavioural priorit
 ### 🛠️ Tech Stack
 - **Language:** Python
 - **Libraries:** Scikit-learn, XGBoost, Pandas, NumPy
-- **Environment:** Kag
+- **Environment:** Kaggle Notebooks
+
