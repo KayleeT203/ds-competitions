@@ -9,5 +9,15 @@ A collection of Machine Learning solutions for data analysing competitions. Focu
 
 ## 📁 Projects
 
-- [Titanic Survival Prediction](./titanic/)
-  - ML baseline and pipeline implementation using Scikit-learn.
+### 🦟 [DengAI: Predicting Disease Spread](./deng-ai/)
+- **Achievement:** **Top 20.5%**
+- **Focus:** Time-series regression, temporal feature engineering (lag variables), and city-specific model optimization.
+
+### 🚢 [Titanic Survival Prediction](./titanic/)
+- **Achievement:** **Top 7%**
+- **Focus:** Binary classification, ensemble learning, and robust validation pipelines.
+
+---
+## ⚖️ License
+This project is licensed under the [MIT License](./LICENSE).
+- 
