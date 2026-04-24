@@ -37,5 +37,5 @@ Recognising that San Juan (coastal) and Iquitos (rainforest) have distinct clima
 ---
 
 ### 🛠️ Project Structure
-- `main.py`: Main execution script including pipeline definition and ensembling.
+- `rf_xgb_version1.py`: Main execution script including pipeline definition and ensembling.
 - `utils.py`: Modularised functions for feature engineering and data cleaning.
