@@ -1,0 +1,7 @@
+version: 2
+
+seeds:
+  - name: net_value_clients
+    config:
+      column_types:
+        net_sales_yen: bigint

@@ -1,0 +1,11 @@
+
+    
+    
+    truncate table "dev"."main"."net_value_clients";
+    -- dbt seed --
+    
+          COPY "dev"."main"."net_value_clients" FROM 'C:\Users\nekoa\project_2026\kayleet_scherbel_project_2026\edinet_growth_analysis\seeds\net_value_clients.csv' (FORMAT CSV, HEADER TRUE, DELIMITER ',')
+        
+
+;
+  

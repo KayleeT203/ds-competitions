@@ -1,0 +1,32 @@
+
+version: 2
+
+models:
+  - name: my_first_dbt_model
+    description: "A starter dbt model"
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        data_tests:
+          - unique
+          - not_null
+
+  - name: my_second_dbt_model
+    description: "A starter dbt model"
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        data_tests:
+          - unique
+          - not_null
+
+  - name: growth_rate_overEqual40_model
+    description: "A dbt model that extracts companies with a sales growth rate of 40% or higher between 2022 and 2026"
+    columns:
+      - name: company
+        description: "The name of the company (primary key)"
+        data_tests:
+          - unique
+          - not_null
+      - name: growth_rate_2022to2026
+        description: 'The cumulative sales growth rate in percentage from 2022 to 2026'
